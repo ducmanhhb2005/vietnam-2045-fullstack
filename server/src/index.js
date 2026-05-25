@@ -8,8 +8,12 @@ const routes = require('./routes');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'https://vietnam-2045-fullstack.vercel.app'
+  ],
   credentials: true
 }));
 app.use(express.json({ limit: '1mb' }));
