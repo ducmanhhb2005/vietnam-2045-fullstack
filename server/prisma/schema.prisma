@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  subtitle    String
+  description String
+  icon        String
+  accent      String
+  createdAt   DateTime @default(now())
+}
+
+model Scenario {
+  id      Int      @id @default(autoincrement())
+  order   Int
+  title   String
+  prompt  String
+  context String
+  icon    String
+  choices Choice[]
+}
+
+model Choice {
+  id            Int      @id @default(autoincrement())
+  label         String
+  text          String
+  feedbackTitle String
+  feedback      String
+  scoreType     String?
+  scoreValue    Int      @default(0)
+  scenarioId    Int
+  scenario      Scenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+}
+
+model QuizQuestion {
+  id                 Int          @id @default(autoincrement())
+  order              Int
+  text               String
+  explanationCorrect String
+  explanationWrong   String
+  options            QuizOption[]
+}
+
+model QuizOption {
+  id         Int          @id @default(autoincrement())
+  label      String
+  text       String
+  isCorrect  Boolean      @default(false)
+  questionId Int
+  question   QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model ResultProfile {
+  id             Int      @id @default(autoincrement())
+  slug           String   @unique
+  title          String
+  subtitle       String
+  badge          String
+  headline       String
+  description    String
+  recommendation String
+  gradient       String
+  icon           String
+  createdAt      DateTime @default(now())
+}
+
+model JourneySession {
+  id              Int      @id @default(autoincrement())
+  roleSlug        String
+  roleTitle       String?
+  digitalScore    Int      @default(0)
+  innovationScore Int      @default(0)
+  pioneerScore    Int      @default(0)
+  knowledgeScore  Int      @default(0)
+  greenScore      Int      @default(0)
+  quizScore       Int      @default(0)
+  totalScore      Int      @default(0)
+  resultSlug      String
+  resultTitle     String
+  choicesText     String
+  answersText     String
+  createdAt       DateTime @default(now())
+}
